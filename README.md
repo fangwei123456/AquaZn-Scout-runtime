@@ -2,7 +2,7 @@
 
 Public, dependency-only CPU image for the private `AquaZn-Scout` repository.
 
-It contains Python, RDKit, PyArrow, DuckDB, pandas, scikit-learn, boto3 and the streaming/download dependencies used by the data pipeline. It also includes the SSH client/server and a small set of command-line utilities so it can be used directly as a Vast.ai SSH container. It deliberately contains no project source code, raw data, model weights, Gaussian installation, or credentials.
+It contains Python, RDKit, PyArrow, DuckDB, pandas, scikit-learn, boto3 and the streaming/download dependencies used by the data pipeline. It also includes the SSH client/server, tmux, rsync and a small set of command-line utilities so it can be used directly as a Vast.ai SSH container. It deliberately contains no project source code, raw data, model weights, Gaussian installation, or credentials.
 
 Image:
 

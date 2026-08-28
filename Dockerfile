@@ -18,7 +18,9 @@ RUN apt-get update \
         openssh-client \
         openssh-server \
         procps \
+        rsync \
         tcsh \
+        tmux \
         unzip \
     && rm -rf /var/lib/apt/lists/*
 
