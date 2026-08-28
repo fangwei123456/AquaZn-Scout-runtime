@@ -1,0 +1,4 @@
+# CUDA-enabled PyTorch is installed from the official cu130 wheel index in
+# Dockerfile. Keeping it separate prevents a future generic PyPI install from
+# silently replacing the CUDA build with a CPU-only build.
+torch==2.13.0+cu130

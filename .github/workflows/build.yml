@@ -35,12 +35,27 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build and push image
+      - name: Build image for validation
         uses: docker/build-push-action@v6
         with:
           context: .
           file: ./Dockerfile
-          push: true
-          tags: ${{ steps.meta.outputs.tags }}
+          load: true
+          tags: ghcr.io/${{ github.repository }}:ci-${{ github.sha }}
           labels: ${{ steps.meta.outputs.labels }}
 
+      - name: Smoke test runtime and CUDA build
+        run: |
+          docker run --rm "ghcr.io/${{ github.repository }}:ci-${GITHUB_SHA}" \
+            python -c "import boto3, duckdb, ijson, numpy, pandas, pyarrow, psycopg, pytest, rdkit, scipy, sklearn, torch, xgboost; assert torch.backends.cuda.is_built(); print({'python': __import__('sys').version.split()[0], 'torch': torch.__version__, 'cuda_build': torch.version.cuda, 'cuda_visible': torch.cuda.is_available()})"
+
+      - name: Push validated image tags
+        env:
+          IMAGE_TAGS: ${{ steps.meta.outputs.tags }}
+          TEST_IMAGE: ghcr.io/${{ github.repository }}:ci-${{ github.sha }}
+        run: |
+          while IFS= read -r image; do
+            [ -n "$image" ] || continue
+            docker tag "$TEST_IMAGE" "$image"
+            docker push "$image"
+          done <<< "$IMAGE_TAGS"
